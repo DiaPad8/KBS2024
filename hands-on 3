@@ -1,0 +1,37 @@
+HANDS ON 3
+
+(defrule diagnostico-gripe
+   (sintomas-presentes (fiebre si) (dolor_de_cabeza si) (congestion_nasal si) (dolor_de_garganta no))
+   =>
+   (assert (diagnostico "Gripe"))
+)
+
+(defrule diagnostico-resfriado
+   (sintomas-presentes (fiebre si) (congestion_nasal si) (dolor_de_cabeza si))
+   =>
+   (assert (diagnostico "Resfriado"))
+)
+
+(defrule diagnostico-bocio
+   (sintomas-presentes (congestion_nasal no) (inflamacio_de_cuello si) (tos si))
+   =>
+   (assert (diagnostico "Bocio endémico"))
+)
+
+(defrule diagnostico-infeccion-urinaria
+   (sintomas-presentes (fiebre si) (inflamacion_renal si))
+   =>
+   (assert (diagnostico "Infección urinaria"))
+)
+
+(defrule diagnostico-diarrea
+   (sintomas-presentes (deshidratacion si) (inflamacion-intestinal si))
+   =>
+   (assert (diagnostico "Diarrea"))
+)
+
+(defrule diagnostico-sindrome-premenstrual
+   (sintomas-presentes (infamacion si) (miomas si))
+   =>
+   (assert (diagnostico "Síndrome premenstrual"))
+)
