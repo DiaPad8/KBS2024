@@ -1,39 +1,43 @@
-(defrule inicializacion
-    =>
-    (assert (Enfermedad (id 1) (nombre "Gripe") (signos fiebre dolor_de_cabeza) (sintomas congestion_nasal dolor_de_garganta)))
-    (assert (Enfermedad (id 2) (nombre "Resfriado") (signos congestion_nasal estornudos) (sintomas dolor_de_garganta tos)))
-    (assert (Enfermedad (id 3) (nombre "Bocio endemico") (signos hinchazon_cuello tos) (sintomas ronquera fatiga)))
-    (assert (Enfermedad (id 4) (nombre "Infeccion_urinaria") (signos fiebre inflaacion_renal) (sintomas ardor sangre_orina)))
-    (assert (Enfermedad (id 5) (nombre "Diarrea") (signos deshidratacion inflamacionintestinal) (sintomas dolor ardor)))
-    (assert (Enfermedad (id 6) (nombre "Sindrome_premestrual") (signos inflamacion miomas) (sintomas dolor_agudo colicos)))
-)
+(deftemplate enfermedad
+ (slot nombre)
+ (slot signo1) 
+ (slot signo2)
+ (slot sintoma1)
+ (slot sintoma2))
 
-(defrule consultar-signos
-    (Enfermedad (id ?id) (nombre ?nombre) (signos $?signos))
-    =>
-    (printout t "Los signos de la enfermedad " ?nombre " (ID: " ?id ") son: " ?signos crlf)
+(assert 
+(enfermedad (nombre Gripe) (signo1 fiebre) (signo2 dolor_de_cabeza) (sintoma1 congestion_nasal) (sintoma2 dolor_de_garganta))
+(enfermedad (nombre Resfriado) (signo1 congestion_nasal) (signo2 estornudos) (sintoma1 dolor_de_garganta) (sintoma2 tos))
+(enfermedad (nombre Bocio_endemico) (signo1 hinchazon_cuello) (signo2 tos) (sintoma1 ronquera) (sintoma2 fatiga))
+(enfermedad (nombre Infeccion_urinaria) (signo1 fiebre) (signo2 inflaacion_renal) (sintoma1 ardor) (sintoma2 sangre_orina))
+(enfermedad (nombre Diarrea) (signo1 deshidratacion) (signo2 inflamacionintestinal) (sintoma1 dolor) (sintoma2 ardor))
+(enfermedad (nombre Sindrome_premestrual) (signo1 inflamacion) (signo2 miomas) (sintoma1 dolor_agudo) (sintoma2 colicos))
 )
 
 (defrule consultar-enfermedades
-    (input-signos $?signos)
-    (Enfermedad (nombre ?nombre) (signos $?enf-signos))
-    (test (subsetp ?signos ?enf-signos))
-    =>
-    (printout t "La enfermedad " ?nombre " coincide con los signos proporcionados." crlf)
+  =>
+  (printout t "Enfermedades registradas:" crlf)
+  (foreach ?enfermedad (find-all-facts ((?f enfermedad)) TRUE)
+    (printout t (fact-slot-value ?enfermedad nombre) crlf)
+  )
 )
 
-(defrule consultar-enfermedades-por-sintomas
-    (input-sintomas $?sintomas)
-    (Enfermedad (nombre ?nombre) (sintomas $?enf-sintomas))
-    (test (subsetp ?sintomas ?enf-sintomas))
-    =>
-    (printout t "La enfermedad " ?nombre " coincide con los síntomas proporcionados." crlf)
+(defrule consultar-Signos
+  =>
+  (printout t "Signos registrados:" crlf)
+  (foreach ?enfermedad (find-all-facts ((?f enfermedad)) TRUE)
+    (printout t "Enfermedad: " (fact-slot-value ?enfermedad nombre))
+    (printout t ", signos: " (fact-slot-value ?enfermedad signo1) ", " (fact-slot-value ?enfermedad signo2) crlf)
+  )
 )
 
-(defrule retractar-enfermedad
-    ?enfermedad <- (Enfermedad (id ?id))
-    (test (= ?id <ID_A_ELIMINAR>))
-=>
-    (retract ?enfermedad)
-    (printout t "Enfermedad con ID " ?id " eliminada." crlf)
+(defrule consultar-Sintomas
+  =>
+  (printout t "Sintomas registrados:" crlf)
+  (foreach ?enfermedad (find-all-facts ((?f enfermedad)) TRUE)
+    (printout t "Enfermedad: " (fact-slot-value ?enfermedad nombre))
+    (printout t ", síntomas: " (fact-slot-value ?enfermedad sintoma1) ", " (fact-slot-value ?enfermedad sintoma2) crlf)
+  )
 )
+
+(retract "number of fact")
