@@ -1,0 +1,9 @@
+(deftemplate position
+  (slot object)
+  (slot location))
+
+(assert
+  (position (object monkey) (location floor))
+  (position (object banana) (location ceiling))
+  (position (object box) (location floor)))
+
