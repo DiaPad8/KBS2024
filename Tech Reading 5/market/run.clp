@@ -1,0 +1,5 @@
+(load "C:/Users/padil/OneDrive/Documentos/NOVENO SEMESTRE/KBS/clips/market/facts.clp")
+(load "C:/Users/padil/OneDrive/Documentos/NOVENO SEMESTRE/KBS/clips/market/facts.clp")
+(load "C:/Users/padil/OneDrive/Documentos/NOVENO SEMESTRE/KBS/clips/market/rules.clp")
+(reset)
+(run)
