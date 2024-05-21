@@ -1,0 +1,120 @@
+(deftemplate position
+  (slot object)
+  (slot location))
+
+(deftemplate state
+  (slot object)
+  (slot mood))
+
+(assert
+  (state (object monkey) (mood angry))
+  (position (object monkey) (location floor))
+  (position (object banana) (location ceiling))
+  (position (object chair) (location floor))
+  (position (object desk) (location floor))
+  (position (object box) (location floor)))
+
+reglas
+
+(defrule move-to-chair
+  ?monkey <- (position (object monkey) (location floor))
+  ?chair <- (position (object chair) (location floor))
+  =>
+  (retract ?monkey)
+  (assert (position (object monkey) (location near-chair))))
+
+(defrule grab-chair
+  ?monkey <- (position (object monkey) (location near-chair))
+  ?chair <- (position (object chair) (location floor))
+  =>
+  (retract ?chair)
+  (assert (position (object chair) (location on-monkey))))
+
+(defrule move-to-desk
+  ?monkey <- (position (object monkey) (location near-chair))
+  ?chair <- (position (object chair) (location on-monkey))
+  ?desk <- (position (object desk) (location floor))
+  =>
+  (retract ?monkey)
+  (assert (position (object monkey) (location near-desk))))
+
+(defrule put-chair-on-desk
+  ?monkey <- (position (object monkey) (location near-desk))
+  ?chair <- (position (object chair) (location on-monkey))
+  ?desk <- (position (object desk) (location floor))
+  =>
+  (retract ?chair)
+  (assert (position (object chair) (location on-top-desk))))
+
+(defrule move-to-box
+  ?monkey <- (position (object monkey) (location near-desk))
+  ?chair <- (position (object chair) (location on-top-desk))
+  ?box <- (position (object box) (location floor))
+  =>
+  (retract ?monkey)
+  (assert (position (object monkey) (location near-box))))
+
+(defrule grab-box
+  ?monkey <- (position (object monkey) (location near-box))
+  ?box <- (position (object box) (location floor))
+  =>
+  (retract ?box)
+  (assert (position (object box) (location on-monkey))))
+
+(defrule put-box-on-desk
+  ?monkey <- (position (object monkey) (location near-box))
+  ?box <- (position (object box) (location on-monkey))
+  ?desk <- (position (object desk) (location floor))
+  =>
+  (retract ?monkey)
+  (assert (position (object monkey) (location near-desk)))
+  (retract ?box)
+  (assert (position (object box) (location on-top-desk))))
+
+(defrule get-on-desk
+  ?monkey <- (position (object monkey) (location near-desk))
+  ?box <- (position (object box) (location on-top-desk))
+  ?desk <- (position (object desk) (location floor))
+  =>
+  (retract ?monkey)
+  (assert (position (object monkey) (location on-top-desk)))
+  (retract ?box)
+  (assert (position (object box) (location on-monkey))))
+
+(defrule put-box-on-chair
+  ?monkey <- (position (object monkey) (location on-top-desk))
+  ?box <- (position (object box) (location on-monkey))
+  =>
+  (retract ?box)
+  (assert (position (object box) (location on-top-chair))))
+
+(defrule get-on-chair
+  ?monkey <- (position (object monkey) (location on-top-desk))
+  ?box <- (position (object box) (location on-top-chair))
+  =>
+  (retract ?monkey)
+  (assert (position (object monkey) (location on-top-chair))))
+
+(defrule get-on-box
+  ?monkey <- (position (object monkey) (location on-top-chair))
+  ?box <- (position (object box) (location on-top-chair))
+  =>
+  (retract ?monkey)
+  (assert (position (object monkey) (location on-top-box))))
+
+(defrule grab-banana
+  ?monkey <- (position (object monkey) (location on-top-box))
+  ?banana <- (position (object banana) (location ceiling))
+  =>
+  (retract ?banana)
+  (assert (position (object banana) (location on-monkey))))
+
+(defrule eat-banana
+  ?monkey <- (position (object monkey) (location on-top-box))
+  ?banana <- (position (object banana) (location on-monkey))
+  ?mood <- (state (object monkey) (mood angry))
+  =>
+  (retract ?banana)
+  (assert (position (object banana) (location on-monkey-stamache)))
+  (retract ?mood)
+  (assert (state (object monkey) (mood happy))))
