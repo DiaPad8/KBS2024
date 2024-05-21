@@ -1,0 +1,3 @@
+
+(load "C:/Users/padil/OneDrive/Documentos/NOVENO SEMESTRE/KBS/clips/prodcust/load-prod-cust.clp")
+(load "C:/Users/padil/OneDrive/Documentos/NOVENO SEMESTRE/KBS/clips/prodcust/load-prodcust-rules.clp")
